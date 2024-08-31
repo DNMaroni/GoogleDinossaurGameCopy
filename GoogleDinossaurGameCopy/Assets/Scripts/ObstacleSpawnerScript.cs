@@ -4,28 +4,47 @@ using UnityEngine;
 
 public class ObstacleSpawnerScript : MonoBehaviour
 {
+    public GameObject[] obstacles;
+    public float desiredYPosition = -1.9f;
 
-    public GameObject obstacleCactus1;
-    public GameObject obstacleCactus2;
-    public GameObject obstacleCactus3;
-    public GameObject obstacleCactus4;
-    public GameObject obstacleCactus5;
+    public void SpawnObstacle(float sizeProportion, int obstacleIndex, float moveSpeed = 5)
+    {  
+        float objectHeight = obstacles[obstacleIndex].GetComponent<Renderer>().bounds.size.y;
+        float objectWidth = obstacles[obstacleIndex].GetComponent<Renderer>().bounds.size.x;
 
-    public void SpawnObstacle(int moveSpeed, float sizeProportion)
-    {
 
-        obstacleCactus1.GetComponent<ObstacleMovementScript>().moveSpeed = moveSpeed;
+        ObstacleMovementScript obstacleMovementScript = obstacles[obstacleIndex].GetComponent<ObstacleMovementScript>();
 
-        Vector3 currentScale = obstacleCactus1.transform.localScale;
+        float newYPosition = desiredYPosition + (objectHeight / 2);
+
+        if(obstacleMovementScript.fly){
+
+            float[] birdPossiblePositions = new float[4]{-1.59f, -0.17f, 0.89f, -0.62f};
+
+            sizeProportion = 1;
+
+            newYPosition = birdPossiblePositions[Random.Range(0, 4)];
+
+        }
+
+        obstacleMovementScript.moveSpeed = moveSpeed;
+
+        Vector3 currentScale = obstacles[obstacleIndex].transform.localScale;
         Vector3 currentSpawnerPosition = transform.position;
 
-        transform.position = new Vector3(currentSpawnerPosition.x, currentSpawnerPosition.y + ((sizeProportion - 1) * 0.30f), currentSpawnerPosition.z);
 
-        obstacleCactus1.transform.localScale = new Vector3(currentScale.x * sizeProportion, currentScale.y * sizeProportion, currentScale.z);
+        //if the object width is higher than 0.9, lets decrease the size proportion
+        if(objectWidth > 0.9f){
+            sizeProportion -= ((sizeProportion * 20) / 100);
+        }
+
+        transform.position = new Vector3(currentSpawnerPosition.x, newYPosition, currentSpawnerPosition.z);
+
+        obstacles[obstacleIndex].transform.localScale = new Vector3(currentScale.x * sizeProportion, currentScale.y * sizeProportion, currentScale.z);
         
-        Instantiate(obstacleCactus1, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
+        Instantiate(obstacles[obstacleIndex], new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
 
-        obstacleCactus1.transform.localScale = currentScale;
+        obstacles[obstacleIndex].transform.localScale = currentScale;
         transform.position = currentSpawnerPosition;
     }
 }

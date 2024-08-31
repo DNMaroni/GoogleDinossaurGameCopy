@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerControllerScript : MonoBehaviour
@@ -58,12 +59,60 @@ public class PlayerControllerScript : MonoBehaviour
         }
     }
 
-    public void FreezeGame(Collision2D collision)
+    public void freezeAllObstacles()
     {
-        collision.gameObject.GetComponent<ObstacleMovementScript>().enabled = false;
+        GameObject[] allGameObjects = FindObjectsOfType<GameObject>();
+
+        List<GameObject> objectsInLayer = new List<GameObject>();
+
+        foreach (GameObject obj in allGameObjects)
+        {
+            if (obj.layer == obstacleLayer)
+            {
+                objectsInLayer.Add(obj);
+            }
+        }
+
+        foreach (GameObject obj in objectsInLayer)
+        {
+            obj.GetComponent<ObstacleMovementScript>().enabled = false;
+
+            if (obj.GetComponent<Animator>() != null)
+            {
+                obj.GetComponent<Animator>().enabled = false;
+            }
+        }
+    }
+
+    public void FreezeGame()
+    {
+        freezeAllObstacles();
         scenarioObject.GetComponent<ParalaxScenarioScript>().enabled = false;
         logicObject.GetComponent<LogicManagerScript>().enabled = false;
+        particleSystem.Clear();
         particleSystem.Stop();
+    }
+
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        if (collision.gameObject.layer == obstacleLayer)
+        {
+            isDead = true;
+            FreezeGame();
+            gameOverObject.SetActive(true);
+            diyingSound.Play();
+
+
+            int totalPoints = logicObject.GetComponent<LogicManagerScript>().countableTotalMiliSeconds;
+
+            if (totalPoints > playerHighScore)
+            {
+                PlayerPrefs.SetInt("highScore", totalPoints);
+                playerHighScore = totalPoints;
+            }
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -79,14 +128,15 @@ public class PlayerControllerScript : MonoBehaviour
         if (collision.gameObject.layer == obstacleLayer)
         {
             isDead = true;
-            FreezeGame(collision);
+            FreezeGame();
             gameOverObject.SetActive(true);
             diyingSound.Play();
 
 
             int totalPoints = logicObject.GetComponent<LogicManagerScript>().countableTotalMiliSeconds;
 
-            if(totalPoints > playerHighScore){
+            if (totalPoints > playerHighScore)
+            {
                 PlayerPrefs.SetInt("highScore", totalPoints);
                 playerHighScore = totalPoints;
             }

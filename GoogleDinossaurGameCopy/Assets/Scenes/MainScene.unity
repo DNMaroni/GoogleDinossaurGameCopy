@@ -272,7 +272,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 2e70df821c70cbccd9199c9bdf29312c, type: 2}
   distance: 0
-  speed: 0.243
+  updatableSpeed: 0.2
+  initialSpeed: 0.2
 --- !u!64 &421236110
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -745,7 +746,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 1.37
   m_AngularDrag: 0.05
-  m_GravityScale: 10
+  m_GravityScale: 8
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -885,7 +886,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.14, y: 0.3}
+  m_Offset: {x: 0.20291135, y: 0.3}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -896,7 +897,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.6594644, y: 0.3950824}
+  m_Size: {x: 0.53364176, y: 0.3950824}
   m_EdgeRadius: 0
 --- !u!70 &558861901
 CapsuleCollider2D:
@@ -930,8 +931,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0800431, y: 0}
-  m_Size: {x: 0.7485834, y: 0.99}
+  m_Offset: {x: -0.090985626, y: -0.08320812}
+  m_Size: {x: 0.6941066, y: 0.82358503}
   m_Direction: 0
 --- !u!82 &558861902
 AudioSource:
@@ -1704,13 +1705,29 @@ MonoBehaviour:
   highScore: {fileID: 1329509724}
   currentScore: {fileID: 768446348}
   playerObject: {fileID: 558861892}
+  scenarioObject: {fileID: 421236108}
   currentScoreText: {fileID: 0}
+  particleSystem: {fileID: 119777463}
   pointSound: {fileID: 1508006658}
   pointInterval: 10
   miliSecondInterval: 0.1
   totalMiliSeconds: 0
   countableTotalMiliSeconds: 0
   timerMiliSeconds: 0
+  spawnTimer: 0
+  spawnDelaySeconds: 1
+  obstaclesMoveSpeed: 6.5
+  spawnLowestDelay: 1
+  spawnHighestDelay: 3
+  SHDelayIncreaseOverTime: 14
+  SLDelayIncreaseOverTime: 14
+  simulationSpeedIncreaseOverTime: 5
+  obstaclesMoveSpeedIncreaseOverTime: 10
+  groundMoveSpeedIncreaseOverTime: 6
+  obstacleMaxRange: 7
+  obstacleMinimumProportionSize: 1
+  obstacleMaximumProportionSize: 1.2
+  obstacleIncreaseOverTime: 15
 --- !u!4 &1508006660
 Transform:
   m_ObjectHideFlags: 0
@@ -1968,11 +1985,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee941c57f5e9feda2b1f5dd1e0de07a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleCactus1: {fileID: 7014981951704382270, guid: 596fe35730627a472b38b6c5eac24fce, type: 3}
-  obstacleCactus2: {fileID: 6203430902210943602, guid: 378a2c19e87d88b148c5b31b8c59f143, type: 3}
-  obstacleCactus3: {fileID: 3616717930610531846, guid: 1918849cef5a9117bb831dba9ab5df11, type: 3}
-  obstacleCactus4: {fileID: 7736982209920431251, guid: ba2a69a7e964ff6f7b661397dd20b164, type: 3}
-  obstacleCactus5: {fileID: 5884975629401238841, guid: 868e7f3f8df50508ea44888d7aed0684, type: 3}
+  obstacles:
+  - {fileID: 7014981951704382270, guid: 596fe35730627a472b38b6c5eac24fce, type: 3}
+  - {fileID: 6203430902210943602, guid: 378a2c19e87d88b148c5b31b8c59f143, type: 3}
+  - {fileID: 3616717930610531846, guid: 1918849cef5a9117bb831dba9ab5df11, type: 3}
+  - {fileID: 7736982209920431251, guid: ba2a69a7e964ff6f7b661397dd20b164, type: 3}
+  - {fileID: 5884975629401238841, guid: 868e7f3f8df50508ea44888d7aed0684, type: 3}
+  - {fileID: 4648770165616995517, guid: 8a399bbcdcc38895dbda37dd4b2cb0e5, type: 3}
+  - {fileID: 6316844166632029939, guid: 358102af0b1132ec0908e02255736f4f, type: 3}
+  - {fileID: 6621764509442788439, guid: b55023507fbe83cfe8b1758e04331aa7, type: 3}
+  desiredYPosition: -1.9
 --- !u!4 &1943813074
 Transform:
   m_ObjectHideFlags: 0
